@@ -1,0 +1,24 @@
+stages:
+  - create_db
+
+create_db:
+  stage: create_db
+  image: python:3.8.7
+  services:
+    - postgres:17.2
+  variables:
+    POSTGRES_DB: $POSTGRES_DB
+    POSTGRES_USER: $POSTGRES_USER
+    POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+  before_script:
+    - pip install psycopg2
+    - pip install discogs-client
+  script:
+    - cd database_creation
+    - mkdir ./covers
+    - ls -l
+    - python fetch_albums.py
+    - ls -l
+  artifacts:
+    paths:
+      - ./database_creation/microsillon.sql
