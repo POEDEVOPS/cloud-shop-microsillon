@@ -83,14 +83,14 @@ try:
 
     # Creating USERS 
     print("Creating table USERS")
-    query = "CREATE TABLE users(id SERIAL PRIMARY KEY,login VARCHAR(50),password VARCHAR(50),role VARCHAR(50),avatar bytea);"
+    query = "CREATE TABLE users(id SERIAL PRIMARY KEY,login VARCHAR(50),password VARCHAR(50),role VARCHAR(50),avatar VARCHAR(255));"
     file.write(query)
     file.write("\n")
     cursor.execute(query)
 
     # Creating ALBUMS 
     print("Creating table ALBUMS")
-    query="CREATE TABLE albums(id SERIAL PRIMARY KEY,title VARCHAR(255),year VARCHAR(4),artist_id VARCHAR(255),labels VARCHAR(255),art bytea,stock INTEGER,price INTEGER);"
+    query="CREATE TABLE albums(id SERIAL PRIMARY KEY,title VARCHAR(255),year VARCHAR(4),artist_id VARCHAR(255),labels VARCHAR(255),art VARCHAR(255),stock INTEGER,price INTEGER);"
     file.write(query)
     file.write("\n")
     cursor.execute(query)
@@ -124,9 +124,8 @@ try:
     print("")
 
     print("Adding user : admin")
-    BLOB = psycopg2.Binary(open("./avatars/admin.jpg", 'rb').read())
     query="insert into users (id, login, password, role, avatar) "
-    query=query+"values ({},'{}','{}', '{}', {});".format(1,"admin", USER_ADMIN_PW, "admin", BLOB )
+    query=query+"values ({},'{}','{}', '{}', {});".format(1,"admin", USER_ADMIN_PW, "admin", "/avatars/admin.jpg" )
     file.write("-- USERS INSERT\n")
     file.write(query)
     file.write("\n")
@@ -134,9 +133,8 @@ try:
     conn.commit()
     # adding user
     print("Adding user : guest")
-    BLOB = psycopg2.Binary(open("./avatars/user.jpg", 'rb').read())
     query="insert into users (id, login, password, role, avatar) "
-    query=query+"values ({},'{}','{}', '{}', {});".format(2,"guest", USER_GUEST_PW, "client", BLOB )
+    query=query+"values ({},'{}','{}', '{}', {});".format(2,"guest", USER_GUEST_PW, "client", "/avatars/user.jpg" )
     file.write(query)
     file.write("\n\n")
     cursor.execute(query)
@@ -178,9 +176,8 @@ try:
         artist_style=music_style
 
         # inserting albums in the db
-        BLOB = psycopg2.Binary(open(cover_filename, 'rb').read())
         query="insert into albums (id,title,artist_id,year,labels,art,stock,price) "
-        query=query+"values ({},'{}',{},'{}','{}',{},{},{});".format(album_id, album_title, album_artist_id, album_year, album_labels, BLOB , random_between(1,10), random_between(5,25))
+        query=query+"values ({},'{}',{},'{}','{}',{},{},{});".format(album_id, album_title, album_artist_id, album_year, album_labels, cover_filename , random_between(1,10), random_between(5,25))
         # Exec query
         print("inserting album {}/{}".format(albums, total_albums))
         file.write(query)

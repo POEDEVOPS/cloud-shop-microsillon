@@ -22,3 +22,5 @@ create_db:
   artifacts:
     paths:
       - ./database_creation/microsillon.sql
+      - ./database_creation/avatars/
+      - ./database_creation/covers/
