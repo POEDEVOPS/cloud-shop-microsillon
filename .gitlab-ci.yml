@@ -1,5 +1,12 @@
+variables:
+  APP_NAME: "microsillon-app"
+  BUCKET_NAME: "microsillon-cloud-shop-00001"
+
 stages:
   - create_db
+  - zip_website
+  - transfer_website
+  - deploy_website
 
 create_db:
   stage: create_db
@@ -15,12 +22,48 @@ create_db:
     - pip install discogs-client
   script:
     - cd database_creation
-    - mkdir ./covers
-    - ls -l
+    - mkdir covers
     - python fetch_albums.py
-    - ls -l
+    - cp -r ./covers/ ../website/public/
+    - cd ../website
+    - sed -i "s/####PASSWORD####/$AWS_POSTGRES_PASSWORD/" index.js
   artifacts:
     paths:
       - ./database_creation/microsillon.sql
-      - ./database_creation/avatars/
-      - ./database_creation/covers/
+      - ./website/
+
+zip_website:
+  stage: zip_website
+  image: alpine
+  script:
+    - apk add zip
+    - pwd
+    - ls -l
+    - zip -r website.zip ./website/
+  artifacts:
+    paths:
+      - ./database_creation/microsillon.sql
+      - ./website.zip
+
+transfer_website:
+  stage: transfer_website
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  script:
+    - aws configure set region $AWS_REGION
+    - aws s3 mb s3://$BUCKET_NAME --region $AWS_REGION
+    - aws s3 cp ./database_creation/microsillon.sql s3://$BUCKET_NAME/microsillon.sql
+    - aws s3 cp ./website.zip s3://$BUCKET_NAME/website.zip
+    # - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=$BUCKET_NAME,S3Key=website
+    # - aws elasticbeanstalk update-environment --application-name $APP_NAME --environment-name "production" --version-label=$CI_PIPELINE_IID
+    # - aws rds create-db-instance --db-instance-identifier microsillon --engine postgres --db-instance-class db.t4g.micro --allocated-storage 20 --master-username postgres --master-user-password $AWS_POSTGRES_PASSWORD
+
+# deploy_website:
+#   stage: deploy_website
+#   image: 
+#     name: amazon/aws-cli
+#     entrypoint: [""]
+#   script:
+#     - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=$BUCKET_NAME,S3Key=website
+#     - aws elasticbeanstalk update-environment --application-name $APP_NAME --environment-name "production" --version-label=$CI_PIPELINE_IID

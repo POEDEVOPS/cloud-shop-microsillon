@@ -83,14 +83,14 @@ try:
 
     # Creating USERS 
     print("Creating table USERS")
-    query = "CREATE TABLE users(id SERIAL PRIMARY KEY,login VARCHAR(50),password VARCHAR(50),role VARCHAR(50),avatar VARCHAR(255));"
+    query = "CREATE TABLE users(id SERIAL PRIMARY KEY,login VARCHAR(50),password VARCHAR(50),role VARCHAR(50),avatar VARCHAR(255), orders VARCHAR(5000));"
     file.write(query)
     file.write("\n")
     cursor.execute(query)
 
     # Creating ALBUMS 
     print("Creating table ALBUMS")
-    query="CREATE TABLE albums(id SERIAL PRIMARY KEY,title VARCHAR(255),year VARCHAR(4),artist_id VARCHAR(255),labels VARCHAR(255),art VARCHAR(255),stock INTEGER,price INTEGER);"
+    query="CREATE TABLE albums(id SERIAL PRIMARY KEY,title VARCHAR(255),year VARCHAR(4),artist_id INTEGER,labels VARCHAR(255),art VARCHAR(255),stock INTEGER,price INTEGER);"
     file.write(query)
     file.write("\n")
     cursor.execute(query)
@@ -125,7 +125,7 @@ try:
 
     print("Adding user : admin")
     query="insert into users (id, login, password, role, avatar) "
-    query=query+"values ({},'{}','{}', '{}', {});".format(1,"admin", USER_ADMIN_PW, "admin", "/avatars/admin.jpg" )
+    query=query+"values ({},'{}','{}', '{}', '{}');".format(1,"admin", USER_ADMIN_PW, "admin", "avatars/admin.jpg" )
     file.write("-- USERS INSERT\n")
     file.write(query)
     file.write("\n")
@@ -134,7 +134,7 @@ try:
     # adding user
     print("Adding user : guest")
     query="insert into users (id, login, password, role, avatar) "
-    query=query+"values ({},'{}','{}', '{}', {});".format(2,"guest", USER_GUEST_PW, "client", "/avatars/user.jpg" )
+    query=query+"values ({},'{}','{}', '{}', '{}');".format(2,"guest", USER_GUEST_PW, "client", "avatars/user.jpg" )
     file.write(query)
     file.write("\n\n")
     cursor.execute(query)
@@ -162,13 +162,13 @@ try:
     for release in search_results:
         # album data
         album_id=release.id
-        album_artist_id="".join(str(artist.id) for artist in release.artists)
+        album_artist_id=int("".join(str(artist.id) for artist in release.artists))
         album_title=release.title.replace("'", "")
         if "live" in album_title.lower() :
             continue
         album_year=release.year
         album_labels="".join(label.name for label in release.labels).replace("'", "")
-        cover_filename="./covers/{}.jpg".format(album_title.replace(" ", "_")).replace("'", "")
+        cover_filename="covers/{}.jpg".format(album_title.replace(" ", "_")).replace("'", "")
         album_cover=downloadCover(release.images[0]["uri"], cover_filename)
 
         # artist data
@@ -177,7 +177,7 @@ try:
 
         # inserting albums in the db
         query="insert into albums (id,title,artist_id,year,labels,art,stock,price) "
-        query=query+"values ({},'{}',{},'{}','{}',{},{},{});".format(album_id, album_title, album_artist_id, album_year, album_labels, cover_filename , random_between(1,10), random_between(5,25))
+        query=query+"values ({},'{}',{},'{}','{}','{}',{},{});".format(album_id, album_title, album_artist_id, album_year, album_labels, cover_filename , random_between(1,10), random_between(5,25))
         # Exec query
         print("inserting album {}/{}".format(albums, total_albums))
         file.write(query)

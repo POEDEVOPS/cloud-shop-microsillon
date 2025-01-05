@@ -1,0 +1,58 @@
+body
+{
+    overflow-x: hidden;
+}
+
+.big-title
+{
+    font-size: 6em;
+    transform: rotate(-7deg);
+
+}
+
+.overview
+{
+    position: relative;
+    height: 50vh;
+    
+}
+
+.im1
+{
+    z-index: 1;
+    transform: rotate(7deg);
+}
+
+.im2
+{
+    z-index: 2;
+    transform: rotate(7deg) translateY(-20vh);
+}
+
+.login
+{
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(29, 28, 28);
+    opacity: .97;
+    z-index: 3;
+}
+
+#login:hover
+{
+    cursor: pointer;
+}
+
+.music-card
+{
+    transition: box-shadow 0.5s ease;
+}
+
+.music-card:hover
+{
+    box-shadow: 10px 10px 20px rgba(36, 36, 36, 0.5);
+    cursor: pointer;
+}
