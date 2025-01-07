@@ -7,7 +7,8 @@ Générateur de sites de vente en ligne de musique d'un style donné (ex : vente
 ## Coté applicatif
 
 * Application web : html - css + framework bootstrap - vanilla js
-* Application serveur : serveur node js avec accès à une base de données Postgresql
+* Application serveur : serveur node js avec module Express
+* Persistence : BDD Postgresql
 
 ## Coté Devops
 
