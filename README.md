@@ -16,9 +16,9 @@ Générateur de sites de vente en ligne de musique d'un style donné (ex : vente
 * Build : gitlab
 * Integrate : docker image nodejs
 * Test : postman - script python de test de création de la BDD
-* Release : Kubernetes on premise
-* Deploy : gitlab
-* Operate : ELK
+* Release : Minikube / Postgresql on Ubunter server
+* Deploy : gitlab + bash scripting
+* Operate : ELK ?
 
 # Variables d'environnements GITLAB
 
