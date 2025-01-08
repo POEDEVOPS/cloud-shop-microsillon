@@ -14,7 +14,7 @@ Générateur de sites de vente en ligne de musique d'un style donné (ex : vente
 
 * Code : visual studio code
 * Build : gitlab
-* Integrate : docker image nodejs 
+* Integrate : docker image nodejs
 * Test : postman - script python de test de création de la BDD
 * Release : Kubernetes on premise
 * Deploy : gitlab
@@ -35,6 +35,7 @@ ACCESS_KEY
 ACCESS_TOKEN
 
 ## POSTGRESQL CREDENTIALS
+
 POSTGRES_DB (visible)
 
 POSTGRES_USER (visible)
